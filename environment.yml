@@ -1,0 +1,11 @@
+name: build_usher_trees
+channels:
+  - conda-forge
+  - defaults
+  - bioconda
+dependencies:
+  - bte
+  - historydag
+  - click
+  - protobuf
+  - frozendict

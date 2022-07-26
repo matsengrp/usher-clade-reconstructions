@@ -1,0 +1,80 @@
+#! /bin/bash
+set -eu
+
+BIGMAT=public-latest.all.masked.pb.gz
+REFSEQFILE=public-latest-reference.fasta
+USHERDOCKER=docker://quay.io/matsengrp/usher
+mkdir -p clades
+# do everything for each clade in focus_clades.txt
+for CLADE in $(cat focus_clades.txt); do
+    CLADEDIR=clades/$CLADE
+    echo Reconstructing $CLADE at $CLADEDIR
+    mkdir $CLADEDIR
+
+    echo '1) subsetting the MAT...'
+    SUBSETMAT=$CLADEDIR/subset_mat.pb
+    singularity exec $USHERDOCKER matUtils extract -i $BIGMAT -o $SUBSETMAT -c $CLADE > /dev/null
+
+    echo '2) getting list of ids in subsetted MAT...'
+    CLADEIDS=$CLADEDIR/clade_ids.txt
+    python historydag/scripts/agg_mut.py get-leaf-ids -t $SUBSETMAT -o $CLADEIDS > /dev/null
+
+    echo '3) building fasta file of all unique sequences in the clade...'
+    UNIQUEFASTA=$CLADEDIR/unique_seqs.fasta
+    python historydag/scripts/agg_mut.py find-leaf-seq $BIGMAT $REFSEQFILE -f $CLADEIDS -o $UNIQUEFASTA -u
+    
+    echo '4) Use reference ID and vcf to reconstruct lots of trees on these samples...'
+    # A reference ID will be chosen by find_trees.
+    singularity exec $USHERDOCKER ./historydag/scripts/find_trees.sh -o $CLADEDIR/trees -f $UNIQUEFASTA
+    
+    echo '5) write reference sequence fasta...'
+    REFERENCEFASTA=$CLADEDIR/reference.fasta
+    REFID=$(cat $CLADEDIR/trees/refid.txt)
+    echo ">$REFID" > $REFERENCEFASTA
+    python historydag/scripts/agg_mut.py lookup-in-fasta $UNIQUEFASTA $REFID >> $REFERENCEFASTA
+
+    echo '6) submit a cluster job to aggregate trees into a DAG.'
+    sbatch -c 1 -J $CLADE -o $CLADEDIR/aggregate.log ./aggregate_script.sh $CLADEDIR
+done
+
+# TODO:
+# - needed to conda install google with:    conda install -c conda-forge google-api-python-client
+# - needed to use conda path to python:     /home/whowards/anaconda3/envs/build_usher_trees/bin/python
+# - added this setting to speed up env:     conda config --set channel_priority false       # conda set channel_priority isn't a command apparently?
+
+# The above code creates hdags filled with new trees and saves them as pickles at ``full_dag.p``.
+for CLADE in $(cat focus_clades.txt); do
+    CLADEDIR=clades/$CLADE
+    SUBSETMAT=$CLADEDIR/subset_mat.pb
+    REFERENCEFASTA=$CLADEDIR/reference.fasta
+    python historydag/scripts/agg_mut.py annotate-support SUBSETMAT REFERENCEFASTA CLADEDIR
+
+    # TODO:
+    # - Get the ete tree from subset_mat.pb
+    # - Edit appropriately
+    # - Merge it into DAG
+    # - Get node2support
+    # - Annotate ete trees nodes with support
+    # - Save as newick
+
+
+
+
+
+
+squeue -l -u $USER
+
+/home/whowards/anaconda3/envs/build_usher_trees/bin/python -m pip install -e .  # at root dir of history dag clone you're editing with the appropriate conda env active
+
+ml singularity;
+ClADE = 19B;
+USHERDOCKER=docker://quay.io/matsengrp/usher;
+CLADEDIR=clades/$CLADE;
+UNIQUEFASTA=$CLADEDIR/unique_seqs.fasta;
+singularity exec $USHERDOCKER ./historydag/scripts/find_trees.sh -o $CLADEDIR/trees -f $UNIQUEFASTA
+
+singularity exec docker://quay.io/matsengrp/usher ./historydag/scripts/find_trees.sh -o clades_test/19B/trees -f clades/19B/unique_seqs.fasta
+bash aggregate_script.sh clades/19B
+
+
+singularity exec $USHERDOCKER ./historydag/scripts/find_trees.sh -o $CLADEDIR/trees -f $UNIQUEFASTA
