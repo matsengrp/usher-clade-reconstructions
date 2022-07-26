@@ -1,0 +1,3 @@
+[submodule "historydag"]
+	path = historydag
+	url = git@github.com:matsengrp/historydag.git
