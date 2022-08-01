@@ -1,9 +1,7 @@
 #! /bin/bash
 set -eu
 
-# NOTE: Might be unnecessary
-# # Init shell
-# conda list
+# Init shell
 eval "$(conda shell.bash hook)"
 conda activate build_usher_trees
 ml Singularity
