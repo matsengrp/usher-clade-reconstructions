@@ -1,0 +1,13 @@
+#!/bin/bash
+set -eu
+# Init shell
+eval "$(conda shell.bash hook)"
+conda activate build_usher_trees
+
+CLADE=$1
+CLADEDIR=clades/$CLADE
+SUBSETMAT=$CLADEDIR/subset_mat.pb
+REFERENCEFASTA=$CLADEDIR/reference.fasta
+UNIQUEFASTA=$CLADEDIR/unique_seqs.fasta
+
+/home/whowards/anaconda3/envs/build_usher_trees/bin/python historydag/scripts/agg_mut.py annotate-support $SUBSETMAT $REFERENCEFASTA $CLADEDIR $UNIQUEFASTA

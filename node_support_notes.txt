@@ -78,3 +78,6 @@ bash aggregate_script.sh clades/19B
 
 
 singularity exec $USHERDOCKER ./historydag/scripts/find_trees.sh -o $CLADEDIR/trees -f $UNIQUEFASTA
+
+/home/whowards/anaconda3/envs/build_usher_trees/bin/python historydag/scripts/agg_mut.py aggregate clades/A.2.5.2/trees/*.pb -o clades/A.2.5.2/full_dag.p --refseq clades/A.2.5.2/reference.fasta
+
