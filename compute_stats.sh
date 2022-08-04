@@ -1,6 +1,11 @@
 #! /bin/bash
 set -eu
 
+# NOTE: Might be unnecessary
+# # Init shell
+# conda list
+eval "$(conda shell.bash hook)"
+conda activate build_usher_trees
 
 for CLADEDIR in clades/*/; do
     sbatch -c 1 -J $(basename $CLADEDIR) -o $CLADEDIR/stats.log ./single_summary.sh $CLADEDIR
