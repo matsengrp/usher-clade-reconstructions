@@ -11,7 +11,7 @@ REFSEQFILE=public-latest-reference.fasta
 USHERDOCKER=docker://quay.io/matsengrp/usher
 mkdir -p clades
 # do everything for each clade in focus_clades.txt
-for CLADE in $(cat focus_clades.txt); do
+for CLADE in $(cat focus_clades_test.txt); do
     CLADEDIR=clades/$CLADE
     echo Reconstructing $CLADE at $CLADEDIR
     # mkdir $CLADEDIR
@@ -30,14 +30,5 @@ for CLADE in $(cat focus_clades.txt); do
     
     echo '4) Use reference ID and vcf to reconstruct lots of trees on these samples...'
     # A reference ID will be chosen by find_trees as the first id + seq in the given fasta file
-    singularity exec $USHERDOCKER ./historydag/scripts/find_trees.sh -o $CLADEDIR/trees -f $UNIQUEFASTA
-    
-    echo '5) write reference sequence fasta...'
-    REFERENCEFASTA=$CLADEDIR/reference.fasta
-    REFID=$(cat $CLADEDIR/trees/refid.txt)
-    echo ">$REFID" > $REFERENCEFASTA
-    /home/whowards/anaconda3/envs/build_usher_trees/bin/python historydag/scripts/agg_mut.py lookup-in-fasta $UNIQUEFASTA $REFID >> $REFERENCEFASTA
-
-    echo '6) submit a cluster job to aggregate trees into a DAG.'
-    sbatch -c 1 -J $CLADE -o $CLADEDIR/aggregate.log ./aggregate_script.sh $CLADEDIR
+    sbatch -c 1 -J $CLADE -o $CLADEDIR/aggregate_2.log ./v2_find_trees.sh $CLADEDIR
 done
