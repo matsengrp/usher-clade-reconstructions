@@ -17,7 +17,7 @@ echo '5) write reference sequence fasta...'
 REFERENCEFASTA=$CLADEDIR/reference.fasta
 REFID=$(cat $CLADEDIR/trees/refid.txt)
 echo ">$REFID" > $REFERENCEFASTA
-/home/whowards/anaconda3/envs/build_usher_trees/bin/python historydag/scripts/agg_mut.py lookup-in-fasta $UNIQUEFASTA $REFID >> $REFERENCEFASTA
+python historydag/scripts/agg_mut.py lookup-in-fasta $UNIQUEFASTA $REFID >> $REFERENCEFASTA
 
 echo '6) submit a cluster job to aggregate trees into a DAG.'
-/home/whowards/anaconda3/envs/build_usher_trees/bin/python historydag/scripts/agg_mut.py aggregate $CLADEDIR/trees/*.pb -o $CLADEDIR/full_dag.p --refseq $CLADEDIR/reference.fasta
+python historydag/scripts/agg_mut.py aggregate $CLADEDIR/trees/*.pb -o $CLADEDIR/full_dag.p --refseq $CLADEDIR/reference.fasta

@@ -6,4 +6,4 @@ conda activate build_usher_trees
 
 
 CLADEDIR=$1
-/home/whowards/anaconda3/envs/build_usher_trees/bin/python historydag/scripts/agg_mut.py aggregate $CLADEDIR/trees/*.pb -o $CLADEDIR/full_dag.p --refseq $CLADEDIR/reference.fasta
+python historydag/scripts/agg_mut.py aggregate $CLADEDIR/trees/*.pb -o $CLADEDIR/full_dag.p --refseq $CLADEDIR/reference.fasta
