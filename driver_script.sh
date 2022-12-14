@@ -6,7 +6,9 @@ eval "$(conda shell.bash hook)"
 conda activate build_usher_trees
 ml Singularity
 
-BIGMAT=public-latest.all.masked.pb.gz
+
+BIGMAT=public-2022-03-02.all.masked.pb.gz
+[ -f $BIGMAT ] || wget http://hgdownload.soe.ucsc.edu/goldenPath/wuhCor1/UShER_SARS-CoV-2/2022/03/02/public-2022-03-02.all.masked.pb.gz
 REFSEQFILE=public-latest-reference.fasta
 USHERDOCKER=docker://quay.io/matsengrp/usher
 mkdir -p clades
@@ -14,7 +16,7 @@ mkdir -p clades
 for CLADE in $(cat focus_clades.txt); do
     CLADEDIR=clades/$CLADE
     echo Reconstructing $CLADE at $CLADEDIR
-    # mkdir $CLADEDIR
+    mkdir -p $CLADEDIR
 
     echo '1) subsetting the MAT...'
     SUBSETMAT=$CLADEDIR/subset_mat.pb

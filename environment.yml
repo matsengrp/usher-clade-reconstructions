@@ -5,7 +5,9 @@ channels:
   - bioconda
 dependencies:
   - bte
-  - historydag
+  - historydag=1.0.1
   - click
   - protobuf
   - frozendict
+  - google-api-python-client
+  - matplotlib

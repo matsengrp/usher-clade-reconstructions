@@ -6,12 +6,20 @@ eval "$(conda shell.bash hook)"
 conda activate build_usher_trees
 ml Singularity
 
-BIGMAT=public-latest.all.masked.pb.gz
+BIGMAT=public-2022-03-02.all.masked.pb.gz
+[ -f $BIGMAT ] || wget http://hgdownload.soe.ucsc.edu/goldenPath/wuhCor1/UShER_SARS-CoV-2/2022/03/02/public-2022-03-02.all.masked.pb.gz
+# get the proper version of the historydag script 'agg_mut.py'
+[ -f historydag ] || {
+    wget https://github.com/matsengrp/historydag/archive/2acf35c759968c8b92de451915e630938470a879.zip -O historydag.zip;
+    unzip historydag.zip;
+    mv historydag-* historydag;
+}
+
 REFSEQFILE=public-latest-reference.fasta
 USHERDOCKER=docker://quay.io/matsengrp/usher
 mkdir -p clades
 # do everything for each clade in focus_clades.txt
-for CLADE in $(cat focus_clades_test.txt); do
+for CLADE in $(cat focus_clades.txt); do
     CLADEDIR=clades/$CLADE
     echo Reconstructing $CLADE at $CLADEDIR
     mkdir -p $CLADEDIR

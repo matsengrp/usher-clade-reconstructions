@@ -6,7 +6,6 @@ git clone git@github.com:matsengrp/historydag.git
 conda config --set channel_priority false
 conda env create -f environment.yml
 conda activate build_usher_trees
-conda install -c conda-forge google-api-python-client
 ml Singularity
 ```
 
