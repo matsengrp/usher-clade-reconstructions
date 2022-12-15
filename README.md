@@ -9,6 +9,8 @@ conda activate build_usher_trees
 ml Singularity
 ```
 
+As configured, this also requires cluster access through `sbatch`.
+
 # Running DAG Generation
 Just make sure the clades of interest are in `focus_clades.txt` (one per line)
 and run:
@@ -23,6 +25,24 @@ cluster. Once `full_dag.p` exists in each subdirectory of `clades`, it's done.
 NOTE: The `v2` version of the driver script pushes more work onto the servers to
 be run in parallel. I've found that it takes notably less time to aggregate trees
 this way.
+
+
+# To Reproduce summary stats for clade reconstructions in the history DAG paper:
+
+Again, make sure the clades of interest are in `focus_clades.txt` (one per
+line) and run:
+
+```
+./v2_driver_script.sh
+```
+
+This will submit cluster jobs. When they're all finished, run
+
+```
+./aggregate_summaries.sh
+```
+
+to aggregate data from all clades into the file `aggregated_summary.csv`
 
 # Running Node Annotation
 Run the following:
