@@ -10,4 +10,4 @@ SUBSETMAT=$CLADEDIR/subset_mat.pb
 REFERENCEFASTA=$CLADEDIR/reference.fasta
 UNIQUEFASTA=$CLADEDIR/unique_seqs.fasta
 
-/home/whowards/anaconda3/envs/build_usher_trees/bin/python historydag/scripts/agg_mut.py explore-annotation $SUBSETMAT $REFERENCEFASTA $CLADEDIR $UNIQUEFASTA
+python historydag/scripts/agg_mut.py explore-annotation $SUBSETMAT $REFERENCEFASTA $CLADEDIR $UNIQUEFASTA
