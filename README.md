@@ -2,7 +2,6 @@
 In order to run this analysis, run
 
 ```
-git clone git@github.com:matsengrp/historydag.git
 conda config --set channel_priority false
 conda env create -f environment.yml
 conda activate build_usher_trees

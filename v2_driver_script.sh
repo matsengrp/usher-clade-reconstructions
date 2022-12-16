@@ -12,7 +12,7 @@ BIGMAT=public-2022-03-02.all.masked.pb.gz
 [ -f historydag ] || {
     wget https://github.com/matsengrp/historydag/archive/2acf35c759968c8b92de451915e630938470a879.zip -O historydag.zip;
     unzip historydag.zip;
-    mv historydag-* historydag;
+    mv historydag-*/ historydag;
 }
 
 REFSEQFILE=public-latest-reference.fasta
