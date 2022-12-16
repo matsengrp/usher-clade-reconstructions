@@ -10,7 +10,7 @@ BIGMAT=public-2022-03-02.all.masked.pb.gz
 [ -f $BIGMAT ] || wget http://hgdownload.soe.ucsc.edu/goldenPath/wuhCor1/UShER_SARS-CoV-2/2022/03/02/public-2022-03-02.all.masked.pb.gz
 # get the proper version of the historydag script 'agg_mut.py'
 [ -f historydag ] || {
-    wget https://github.com/matsengrp/historydag/archive/2acf35c759968c8b92de451915e630938470a879.zip -O historydag.zip;
+    wget https://github.com/matsengrp/historydag/archive/d3488a63d418d1e16abd25e41fc2da5e424bded6.zip -O historydag.zip;
     unzip historydag.zip;
     mv historydag-*/ historydag;
 }
